@@ -1,0 +1,28 @@
+language: go
+go:
+  - '1.11'
+install:
+  - go get github.com/onsi/ginkgo/ginkgo
+  - go get github.com/onsi/gomega
+  - go get github.com/cloudfoundry/libbuildpack/packager/buildpack-packager
+  - export GO111MODULE=on
+script:
+  - |
+    if [ "$(go fmt ./...)"]; then
+      echo "You need to run `go fmt`"
+      exit 1
+    fi
+  - go test ./src/...
+after_success:
+  - buildpack-packager build -any-stack -cached
+deploy:
+  provider: releases
+  api_key:
+    secure: UQkgAKt2E9n4F7jWgARPmDn+kszA2P/DE6we+3F+3ZGMLVw0XRhuDZdlWYViHsuVv97ZqgGDuG/1t3YwLrceiy6KgO7m4HOlK8E42D0QehAN06yy6zjaLkzL70yjgSuFp6bCCB1Iy/8/reSZq0KcsZ26Zlm92er3+CH5+eHFCWb/UHQUtu+wtYJurMRkdcxHSUZ/nulll1Box0H5JmbU0quy9JMFgmm/Va4M1A/fJFO4pwzim/8iZRLZ5H5AmlYcKPzObCaXOU0VHaoaDRlzY+jeGkyvRs4TSZuagWC8vnSFrgTepP9gT06BoT2OKuKhT6Px7RU0t/LeCTH2vdz5tHhE9bEOHSny0/amesOaBpkzqzSa5nk/sPZ7iauNJtWVXYWN8/QWZi597d/MNNjfHt1jJDEvBB7fxhiEN86tk9QrdP2IPeq87kLiRA39OEf8eNq4MU7P3W1hzeZ6MvlWfSv5H/fxaJs0oBUPf2KrSQ2iMBZr9n8fWEgQTshrUdsFWKftg4hKiVvctJqVgBKkS/KDhpvLRa+w9GfnF6WD8utWGqaZDaAeuu4leu1KSw7nwuYhLbHLNVhuEU78ZHEq+c8IVnh58hydIRlfA97xLfTx5gkIsMAUsGHkW8lSD80XWrYtC8qitXGBOflJM96ZRCUPQKesfD3ASyS+ONYcyG0=
+  file:
+    - "*.zip"
+
+  on:
+    tags: true
+    all_branches: true
+  skip_cleanup: true

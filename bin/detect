@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# no need here, only supply
+
+exit 1

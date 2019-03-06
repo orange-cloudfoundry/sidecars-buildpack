@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+# This script prepares and configures the app for launch.
+
+set -euo pipefail
+
+echo "This buildpack cannot be used as final buildpack"
+
+exit 1

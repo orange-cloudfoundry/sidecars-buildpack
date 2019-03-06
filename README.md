@@ -98,7 +98,7 @@ sidecars:
   executable: coredns
   artifact_uri: https://github.com/coredns/coredns/releases/download/v1.4.0/coredns_1.4.0_linux_amd64.tgz
   artifact_type: http
-  artifact_sha1: 
+  artifact_sha1: 7b3889d26bd9b6cf6687cac8a7358132af24e287
   args:
   - "-dns.port"
   - "1053"

@@ -3,7 +3,6 @@ go:
   - '1.11'
 install:
   - go get github.com/onsi/ginkgo/ginkgo
-  - go get github.com/onsi/gomega
   - go get github.com/cloudfoundry/libbuildpack/packager/buildpack-packager
   - export GO111MODULE=on
 script:

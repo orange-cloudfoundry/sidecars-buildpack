@@ -11,7 +11,7 @@ script:
       echo "You need to run `go fmt`"
       exit 1
     fi
-  - go test ./src/...
+  - ginkgo -r -skipPackage=brats,integration ./src/...
 after_success:
   - printf "${TRAVIS_BRANCH:-0.0.0}" | sed 's/^v//' > VERSION
   - buildpack-packager build -any-stack -cached

@@ -6,16 +6,16 @@ default_versions:
 dependency_deprecation_dates: ~
 dependencies:
   - name: cloud-sidecars
-    version: 0.2.0
-    uri: https://github.com/orange-cloudfoundry/cloud-sidecars/releases/download/v0.2.0/cloud-sidecars_linux_amd64.zip
-    sha256: c8f37eb0441e011ad28445d895d2d1e2ce56afa08cab56f2670bdfac9357713d
+    version: 0.2.1
+    uri: https://github.com/orange-cloudfoundry/cloud-sidecars/releases/download/v0.2.1/cloud-sidecars_linux_amd64.zip
+    sha256: e8cf9d64dfe6d5b0f5cf6d8e1a77e838673bd7f62277487bcd9cb01d41a71b45
     cf_stacks:
       - cflinuxfs2
       - cflinuxfs3
   - name: cloud-sidecars
-    version: 0.2.0
-    uri: https://github.com/orange-cloudfoundry/cloud-sidecars/releases/download/v0.2.0/cloud-sidecars_windows_amd64.zip
-    sha256: cb9a4068f62ea00fb9a2a44ea5f01c38b327a90744a62b318a712cad917bcff0
+    version: 0.2.1
+    uri: https://github.com/orange-cloudfoundry/cloud-sidecars/releases/download/v0.2.1/cloud-sidecars_windows_amd64.zip
+    sha256: 1480e1050ec4d25abf04df4b61efd2fc80ee8a7ad1860d47ae22d7623cb5ce0b
     cf_stacks:
       - windows2012R2
       - windows2016

@@ -84,9 +84,13 @@ func (b *Builder) Run() error {
 
 	b.Build.Logger.Info("Finished running cloud-sidecars setup.")
 
-	return layer.WriteProfile("cloud-sidecars.sh",
-		`export PATH=$PATH:"$HOME/bin":%s`,
+	return layer.WriteProfile("000_cloud-sidecars.sh",
+		`export PATH=$PATH:"$HOME/bin":%s
+export %s='%s'
+`,
 		layerBin,
+		bpIoPathEnvVarKey,
+		launcherPath,
 	)
 }
 

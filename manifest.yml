@@ -28,5 +28,6 @@ include_files:
   - bin/supply
   - bin/finalize
   - bin/release
+  - bin/build
   - manifest.yml
 pre_package: scripts/build.sh

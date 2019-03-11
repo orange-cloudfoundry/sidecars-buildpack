@@ -1,4 +1,11 @@
 #!/usr/bin/env bash
-# no need here, only supply
 
-exit 1
+if [[ -f sidecars-config.yml ]]; then
+    exit 0
+fi
+
+if [[ -f .sidecars/sidecars-config.yml ]]; then
+    exit 0
+fi
+
+exit 100

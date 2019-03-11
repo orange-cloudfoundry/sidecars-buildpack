@@ -19,6 +19,7 @@ after_success:
   - mkdir buildpack-builded
   - unzip *.zip -d buildpack-builded
   - WD="$(pwd)"
+  - cp buildpack.toml buildpack-builded/
   - cd buildpack-builded
   - tar -zcvf "../sidecars_buildpack-v3-cached-v$(printf "${TRAVIS_BRANCH:-0.0.0}" | sed 's/^v//').tgz" bin/ dependencies/ buildpack.toml manifest.yml
   - cd $WD

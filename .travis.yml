@@ -16,8 +16,12 @@ after_success:
   - printf "${TRAVIS_BRANCH:-0.0.0}" | sed 's/^v//' > VERSION
   - buildpack-packager build -any-stack -cached
   - sed -i "s/__VERSION__/$(printf "${TRAVIS_BRANCH:-0.0.0}" | sed 's/^v//')/" buildpack.toml
-  - scripts/build.sh
-  - tar -zcvf "sidecars_buildpack_v3-v$(printf "${TRAVIS_BRANCH:-0.0.0}" | sed 's/^v//').tgz" bin/ buildpack.toml
+  - mkdir buildpack-builded
+  - unzip *.zip -d buildpack-builded
+  - WD="$(pwd)"
+  - cd buildpack-builded
+  - tar -zcvf "../sidecars_buildpack-v3-cached-v$(printf "${TRAVIS_BRANCH:-0.0.0}" | sed 's/^v//').tgz" bin/ dependencies/ buildpack.toml manifest.yml
+  - cd $WD
 deploy:
   provider: releases
   api_key:

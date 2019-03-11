@@ -2,6 +2,7 @@ package main
 
 import (
 	_ "github.com/orange-cloudfoundry/sidecars-buildpack/src/sidecars/hooks"
+	"github.com/orange-cloudfoundry/sidecars-buildpack/src/sidecars/installer"
 	"github.com/orange-cloudfoundry/sidecars-buildpack/src/sidecars/supply"
 	"os"
 	"path/filepath"
@@ -24,7 +25,7 @@ func main() {
 		logger.Error("Unable to load buildpack manifest: %s", err.Error())
 		os.Exit(10)
 	}
-	installer := libbuildpack.NewInstaller(manifest)
+	lInstaller := libbuildpack.NewInstaller(manifest)
 
 	stager := libbuildpack.NewStager(os.Args[1:], logger, manifest)
 	if err := stager.CheckBuildpackValid(); err != nil {
@@ -34,7 +35,7 @@ func main() {
 	os.MkdirAll(filepath.Join(stager.DepDir(), "bin"), 0755)
 	os.MkdirAll(filepath.Join(stager.DepDir(), "lib"), 0755)
 
-	if err = installer.SetAppCacheDir(stager.CacheDir()); err != nil {
+	if err = lInstaller.SetAppCacheDir(stager.CacheDir()); err != nil {
 		logger.Error("Unable to setup app cache dir: %s", err)
 		os.Exit(18)
 	}
@@ -61,11 +62,10 @@ func main() {
 	}
 
 	s := supply.Supplier{
-		Manifest:  manifest,
-		Installer: installer,
 		Stager:    stager,
 		Command:   &libbuildpack.Command{},
 		Log:       logger,
+		Installer: installer.NewInstaller(lInstaller, manifest),
 	}
 
 	err = s.Run()
@@ -78,7 +78,7 @@ func main() {
 		logger.Error("Error writing config.yml: %s", err.Error())
 		os.Exit(16)
 	}
-	if err = installer.CleanupAppCache(); err != nil {
+	if err = lInstaller.CleanupAppCache(); err != nil {
 		logger.Error("Unable clean up app cache: %s", err)
 		os.Exit(19)
 	}

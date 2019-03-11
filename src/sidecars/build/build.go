@@ -1,39 +1,40 @@
 package build
 
 import (
-	"encoding/json"
 	"fmt"
 	"github.com/buildpack/libbuildpack/build"
 	"github.com/buildpack/libbuildpack/layers"
-	"io"
-	"net/http"
 	"os"
 	"os/exec"
 	"path/filepath"
-	"runtime"
 )
 
 const (
-	cloudSidecarsRepo = "orange-cloudfoundry/cloud-sidecars"
 	configFileName    = "sidecars-config.yml"
 	pathSidecarsWd    = ".sidecars"
 	bpIoPathEnvVarKey = "BUILDPACKS_IO_LAUNCHER_PATH"
 )
 
+type Installer interface {
+	InstallCloudSidecars(depDir, tempDir string) error
+}
+
 type Builder struct {
-	Build build.Build
+	Build     build.Build
+	Installer Installer
 }
 
 func (b *Builder) Run() error {
 	layer := b.Build.Layers.Layer("sidecars")
 	layerBin := filepath.Join(layer.Root, "bin")
+	os.MkdirAll(layerBin, 0755)
 
-	b.Build.Logger.Info("Downloading cloud sidecars ...")
-	err := downloadCloudSidecar(layerBin)
+	b.Build.Logger.Info("Installing cloud-sidecars ...")
+	err := b.Installer.InstallCloudSidecars(layer.Root, "/tmp/cloud-sidecars")
 	if err != nil {
 		return err
 	}
-	b.Build.Logger.Info("Finished downloading cloud sidecars.")
+	b.Build.Logger.Info("Finished installing cloud-sidecars ...")
 
 	b.Build.Logger.Info("Running cloud-sidecars setup ...")
 	logLevel := "info"
@@ -94,52 +95,4 @@ func findLifecycleLauncher() (string, error) {
 		return filepath.Join(string(os.PathSeparator), "lifecycle", "launcher"), nil
 	}
 	return "", fmt.Errorf("could not found lifecycle launcher")
-}
-
-func downloadCloudSidecar(folder string) error {
-	binName := "cloud-sidecars_linux_amd64"
-	if runtime.GOOS == "windows" {
-		binName = "cloud-sidecars_windows_amd64.exe"
-	}
-	version, err := cloudSidecarsVersion()
-	if err != nil {
-		return fmt.Errorf("Error when retrieving cloud-sidecars version: %s", err.Error())
-	}
-
-	dlUrl := fmt.Sprintf("https://github.com/%s/releases/download/%s/%s", cloudSidecarsRepo, version, binName)
-	resp, err := http.Get(dlUrl)
-	if err != nil {
-		return fmt.Errorf("Error when downloading %s version: %s", dlUrl, err.Error())
-	}
-	defer resp.Body.Close()
-
-	f, err := os.OpenFile(filepath.Join(folder, "cloud-sidecars"), os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0755)
-	if err != nil {
-		return fmt.Errorf("Error when downloading %s version: %s", dlUrl, err.Error())
-	}
-
-	io.Copy(f, resp.Body)
-	return nil
-}
-
-func cloudSidecarsVersion() (string, error) {
-	version, ok := os.LookupEnv("BP_SIDECARS_VERSION")
-	if ok {
-		return version, nil
-	}
-	resp, err := http.Get(fmt.Sprintf("https://api.github.com/repos/%s/releases/latest", cloudSidecarsRepo))
-	if err != nil {
-		return "", err
-	}
-	defer resp.Body.Close()
-
-	tagStruct := struct {
-		TagName string `json:"tag_name"`
-	}{}
-
-	err = json.NewDecoder(resp.Body).Decode(&tagStruct)
-	if err != nil {
-		return "", err
-	}
-	return tagStruct.TagName, nil
 }

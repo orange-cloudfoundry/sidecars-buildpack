@@ -33,14 +33,18 @@ func NewInstaller(depInstaller DepInstaller, manifest Manifest) *Installer {
 }
 
 func (s *Installer) InstallCloudSidecars(depDir, tempDir string) error {
+	gServerName := "cloud-sidecars"
+	stack := "cflinuxfs2"
+	if runtime.GOOS == "windows" {
+		gServerName += ".exe"
+		stack = "windows"
+	}
+	os.Setenv("CF_STACK", stack)
 	dep, err := s.manifest.DefaultVersion("cloud-sidecars")
 	if err != nil {
 		return err
 	}
-	gServerName := "cloud-sidecars"
-	if runtime.GOOS == "windows" {
-		gServerName += ".exe"
-	}
+
 	installDir := filepath.Join(filepath.Join(depDir, "bin", gServerName))
 
 	if err := s.depInstaller.InstallDependency(dep, tempDir); err != nil {

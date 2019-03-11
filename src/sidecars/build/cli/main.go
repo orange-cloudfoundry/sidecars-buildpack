@@ -39,8 +39,5 @@ func main() {
 		os.Exit(15)
 	}
 
-	if err = lInstaller.CleanupAppCache(); err != nil {
-		log.Error("Unable clean up app cache: %s", err)
-		os.Exit(19)
-	}
+	lInstaller.CleanupAppCache()
 }

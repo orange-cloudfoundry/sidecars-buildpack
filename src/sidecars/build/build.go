@@ -30,7 +30,7 @@ func (b *Builder) Run() error {
 	os.MkdirAll(layerBin, 0755)
 
 	b.Build.Logger.Info("Installing cloud-sidecars ...")
-	err := b.Installer.InstallCloudSidecars(layer.Root, "/tmp/cloud-sidecars")
+	err := b.Installer.InstallCloudSidecars(layer.Root, layerBin)
 	if err != nil {
 		return err
 	}

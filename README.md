@@ -67,7 +67,7 @@ sidecars:
   artifact_sha1: "94aba65bd7d2dca6fb115716fee3a575fb03ad1d"
   # Run script after downloading your artifact
   # here it renames gobis-server_linux_amd64 to gobis-server
-  after_download: "mv * gobis-server"
+  after_install: "mv * gobis-server"
   # pass args to executable
   args: 
   - "--sidecar"

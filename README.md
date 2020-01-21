@@ -33,10 +33,23 @@ applications:
     command: cloud-sidecars launch # tips: you can use all cli params from cloud-sidecars, add flag `--log-level debug` to enable debug mode for example
 ```
 
-**Tips**: You can override start command for your app by creating a file named `Procfile` and add a `start` entry, e.g.:
-
+**Tips**:
+- You can override start command for your app by creating a file named `Procfile` and add a `start` entry, e.g.:
 ```yaml
 start: start-command-for-app
+```
+- You can set a different config path for getting a `sidecars-config.yml` file by setting env var `SIDECARS_BP_CONFIG_PATH`. This is useful for java app, 
+ you can put the `sidecars-config.yml` file in `src/main/resources` on a spring boot app and set manifest.yml like this:
+```yaml
+applications:
+  - name: my-app
+    buildpacks:
+      - sidecars_buildpack
+      - staticfile_buildpack
+    disk_quota: 1G
+    command: cloud-sidecars -c ${SIDECARS_BP_CONFIG_PATH} launch
+    env:
+      SIDECARS_BP_CONFIG_PATH: BOOT-INF/classes/sidecars-config.yml
 ```
 
 

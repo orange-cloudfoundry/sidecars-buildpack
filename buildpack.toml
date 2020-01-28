@@ -5,3 +5,6 @@ name = "Sidecars buildpack"
 
 [[stacks]]
 id = "io.buildpacks.stacks.bionic"
+
+[[stacks]]
+id = "org.cloudfoundry.stacks.cflinuxfs3"

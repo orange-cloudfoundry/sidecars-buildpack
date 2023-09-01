@@ -12,6 +12,7 @@ dependencies:
     cf_stacks:
       - cflinuxfs2
       - cflinuxfs3
+      - cflinuxfs4
   - name: cloud-sidecars
     version: 0.4.1
     uri: https://github.com/orange-cloudfoundry/cloud-sidecars/releases/download/v0.4.1/cloud-sidecars_windows_amd64.zip

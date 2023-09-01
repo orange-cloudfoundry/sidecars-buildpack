@@ -9,6 +9,7 @@ Sidecar can be run beside your app or in front of your app as a reverse proxy to
 This buildpack can't be used as a final buildpack and support stacks:
 - cflinuxfs2
 - cflinuxfs3
+- cflinuxfs4
 - windows2012R2
 - windows2016
 - windows

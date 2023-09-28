@@ -124,7 +124,9 @@ fi
 
 `, i, i)
 	}
-	os.MkdirAll(filepath.Join(s.Stager.BuildDir(), profiledUserPath), 0755)
+	if err := os.MkdirAll(filepath.Join(s.Stager.BuildDir(), profiledUserPath), 0755); err != nil {
+		return err
+	}
 	return ioutil.WriteFile(filepath.Join(s.Stager.BuildDir(), profiledUserPath, profiledUserFilename), []byte(script), 0775)
 }
 
@@ -137,7 +139,9 @@ func (s *Supplier) retrieveConfigPath() (string, error) {
 		}
 		return userConfPath, nil
 	}
-	os.MkdirAll(filepath.Join(buildDir, pathSidecarsWd), 0755)
+	if err := os.MkdirAll(filepath.Join(buildDir, pathSidecarsWd), 0755); err != nil {
+		return "", err
+	}
 	confPath := filepath.Join(buildDir, pathSidecarsWd, configFileName)
 	userWdConfPath := filepath.Join(buildDir, configFileName)
 	if _, err := os.Stat(userWdConfPath); err == nil {

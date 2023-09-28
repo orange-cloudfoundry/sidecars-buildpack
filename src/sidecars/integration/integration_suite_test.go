@@ -1,7 +1,6 @@
 package integration_test
 
 import (
-	"encoding/json"
 	"flag"
 	"fmt"
 	"net/url"
@@ -31,42 +30,44 @@ func initConfig() {
 	flag.Parse()
 }
 
-var _ = SynchronizedBeforeSuite(func() []byte {
-	// Run once
-	if buildpackVersion == "" {
-		packagedBuildpack, err := cutlass.PackageUniquelyVersionedBuildpack("", true) // "" denotes any stack. Use specific stack (e.g. "cflinuxfs2" if desired)
-		Expect(err).NotTo(HaveOccurred())
+// FIXME: waiting for resolution https://github.com/cloudfoundry/libbuildpack/issues/145
+//var _ = SynchronizedBeforeSuite(func() []byte {
+//	// Run once
+//	if buildpackVersion == "" {
+//		packagedBuildpack, err := cutlass.PackageUniquelyVersionedBuildpack("", true) // "" denotes any stack. Use specific stack (e.g. "cflinuxfs2" if desired)
+//		Expect(err).NotTo(HaveOccurred())
+//
+//		data, err := json.Marshal(packagedBuildpack)
+//		Expect(err).NotTo(HaveOccurred())
+//		return data
+//	}
+//
+//	return []byte{}
+//}, func(data []byte) {
+//	// Run on all nodes
+//	var err error
+//	if len(data) > 0 {
+//		err = json.Unmarshal(data, &packagedBuildpack)
+//		Expect(err).NotTo(HaveOccurred())
+//		buildpackVersion = packagedBuildpack.Version
+//	}
+//
+//	bpDir, err = cutlass.FindRoot()
+//	Expect(err).NotTo(HaveOccurred())
+//
+//	Expect(cutlass.CopyCfHome()).To(Succeed())
+//	cutlass.SeedRandom()
+//	cutlass.DefaultStdoutStderr = GinkgoWriter
+//})
 
-		data, err := json.Marshal(packagedBuildpack)
-		Expect(err).NotTo(HaveOccurred())
-		return data
-	}
-
-	return []byte{}
-}, func(data []byte) {
-	// Run on all nodes
-	var err error
-	if len(data) > 0 {
-		err = json.Unmarshal(data, &packagedBuildpack)
-		Expect(err).NotTo(HaveOccurred())
-		buildpackVersion = packagedBuildpack.Version
-	}
-
-	bpDir, err = cutlass.FindRoot()
-	Expect(err).NotTo(HaveOccurred())
-
-	Expect(cutlass.CopyCfHome()).To(Succeed())
-	cutlass.SeedRandom()
-	cutlass.DefaultStdoutStderr = GinkgoWriter
-})
-
-var _ = SynchronizedAfterSuite(func() {
-	// Run on all nodes
-}, func() {
-	// Run once
-	Expect(cutlass.RemovePackagedBuildpack(packagedBuildpack)).To(Succeed())
-	Expect(cutlass.DeleteOrphanedRoutes()).To(Succeed())
-})
+// FIXME: waiting for resolution https://github.com/cloudfoundry/libbuildpack/issues/145
+//var _ = SynchronizedAfterSuite(func() {
+//	// Run on all nodes
+//}, func() {
+//	// Run once
+//	Expect(cutlass.RemovePackagedBuildpack(packagedBuildpack)).To(Succeed())
+//	Expect(cutlass.DeleteOrphanedRoutes()).To(Succeed())
+//})
 
 func TestIntegration(t *testing.T) {
 	initConfig()

@@ -23,7 +23,7 @@ var bpDir string
 var buildpackVersion string
 var packagedBuildpack cutlass.VersionedBuildpackPackage
 
-func init() {
+func initConfig() {
 	flag.StringVar(&buildpackVersion, "version", "", "version to use (builds if empty)")
 	flag.BoolVar(&cutlass.Cached, "cached", true, "cached buildpack")
 	flag.StringVar(&cutlass.DefaultMemory, "memory", "128M", "default memory for pushed apps")
@@ -69,6 +69,7 @@ var _ = SynchronizedAfterSuite(func() {
 })
 
 func TestIntegration(t *testing.T) {
+	initConfig()
 	RegisterFailHandler(Fail)
 	RunSpecs(t, "Integration Suite")
 }

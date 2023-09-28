@@ -3,7 +3,6 @@ package supply
 import (
 	"fmt"
 	"io"
-	"io/ioutil"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -127,7 +126,7 @@ fi
 	if err := os.MkdirAll(filepath.Join(s.Stager.BuildDir(), profiledUserPath), 0755); err != nil {
 		return err
 	}
-	return ioutil.WriteFile(filepath.Join(s.Stager.BuildDir(), profiledUserPath, profiledUserFilename), []byte(script), 0775)
+	return os.WriteFile(filepath.Join(s.Stager.BuildDir(), profiledUserPath, profiledUserFilename), []byte(script), 0775)
 }
 
 func (s *Supplier) retrieveConfigPath() (string, error) {

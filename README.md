@@ -1,8 +1,8 @@
-# Sidecars buildpack [![Build Status](https://travis-ci.com/orange-cloudfoundry/sidecars-buildpack.svg?branch=master)](https://travis-ci.com/orange-cloudfoundry/sidecars-buildpack)
+# Sidecars buildpack
 
 Sidecars is a special buildpack to let you run any processes as sidecar in your application.
 
-Under the hood it wrap [cloud-sidecars](https://github.com/orange-cloudfoundry/cloud-sidecars) cli.
+Under the hood it wraps the [cloud-sidecars](https://github.com/orange-cloudfoundry/cloud-sidecars) CLI.
 
 Sidecar can be run beside your app or in front of your app as a reverse proxy to your app.
 
@@ -36,22 +36,22 @@ applications:
 
 **Tips**:
 - You can override start command for your app by creating a file named `Procfile` and add a `start` entry, e.g.:
-```yaml
-start: start-command-for-app
-```
+  ```yaml
+  start: start-command-for-app
+  ```
 - You can set a different config path for getting a `sidecars-config.yml` file by setting env var `SIDECARS_BP_CONFIG_PATH`. This is useful for java app, 
  you can put the `sidecars-config.yml` file in `src/main/resources` on a spring boot app and set manifest.yml like this:
-```yaml
-applications:
-  - name: my-app
-    buildpacks:
-      - sidecars_buildpack
-      - staticfile_buildpack
-    disk_quota: 1G
-    command: cloud-sidecars -c ${SIDECARS_BP_CONFIG_PATH} launch
-    env:
-      SIDECARS_BP_CONFIG_PATH: BOOT-INF/classes/sidecars-config.yml
-```
+  ```yaml
+  applications:
+    - name: my-app
+      buildpacks:
+        - sidecars_buildpack
+        - staticfile_buildpack
+      disk_quota: 1G
+      command: cloud-sidecars -c ${SIDECARS_BP_CONFIG_PATH} launch
+      env:
+        SIDECARS_BP_CONFIG_PATH: BOOT-INF/classes/sidecars-config.yml
+  ```
 
 
 ### Configuration
@@ -86,7 +86,7 @@ sidecars:
   args: 
   - "--sidecar"
   - "--sidecar-app-port"
-  # this sidecar is defines as reverse proxy, it give a PROXY_APP_PORT env var
+  # this sidecar is defined as reverse proxy, it gives a PROXY_APP_PORT env var
   # as bellow you can give args in posix style from env var
   - "${PROXY_APP_PORT}"
   # Set env var for sidecar
@@ -97,9 +97,9 @@ sidecars:
   # Set env var for app, all app_env found in sidecars will be merged in one
   # you can give a value in posix style from env var
   app_env: {}
-  # You can pass a profile file which will be source before executing app
+  # You can pass a profile file which will be sourced before executing app
   profiled: ""
-  # Set working directory, by defaul it is the dir defined by cli flag --dir
+  # Set working directory, by default it is the dir defined by cli flag --dir
   work_dir: ""
   # Do not put prefix in stdout/stderr for this sidecar
   no_log_prefix: false
@@ -129,58 +129,64 @@ sidecars:
 ### Building the Buildpack
 To build this buildpack, run the following command from the buildpack's directory:
 
-1. Source the .envrc file in the buildpack directory.
-```bash
-source .envrc
-```
-To simplify the process in the future, install [direnv](https://direnv.net/) which will automatically source .envrc when you change directories.
+1. Source the `.envrc` file in the buildpack directory.
+   ```bash
+   source .envrc
+   ```
+   To simplify the process in the future, install [direnv] which will automatically source `.envrc` when you change directories.
 
-1. Install buildpack-packager
-```bash
-./scripts/install_tools.sh
-```
+2. Install buildpack-packager
+   ```bash
+   ./scripts/install_tools.sh
+   ```
 
-1. Build the buildpack
-```bash
-buildpack-packager build
-```
+3. Build the buildpack
+   ```bash
+   buildpack-packager build
+   ```
 
-1. Use in Cloud Foundry
-Upload the buildpack to your Cloud Foundry and optionally specify it by name
+4. Use in Cloud Foundry
 
-```bash
-cf create-buildpack [BUILDPACK_NAME] [BUILDPACK_ZIP_FILE_PATH] 1
-cf push my_app [-b BUILDPACK_NAME]
-```
+   Upload the buildpack to your Cloud Foundry and optionally specify it by name
+  
+   ```bash
+   cf create-buildpack $BUILDPACK_NAME $BUILDPACK_ZIP_FILE_PATH 1
+   cf push my_app [-b $BUILDPACK_NAME]
+   ```
 
 ### Testing
-Buildpacks use the [Cutlass](https://github.com/cloudfoundry/libbuildpack/cutlass) framework for running integration tests.
+Buildpacks use the [cutlass] framework (from Cloud Foundry [libbuildpack]) for running integration tests.
+
+[cutlass]: https://github.com/cloudfoundry/libbuildpack/tree/master/cutlass
+[libbuildpack]: https://github.com/cloudfoundry/libbuildpack
 
 To test this buildpack, run the following command from the buildpack's directory:
 
-1. Source the .envrc file in the buildpack directory.
+1. Source the `.envrc` file in the buildpack directory.
 
-```bash
-source .envrc
-```
-To simplify the process in the future, install [direnv](https://direnv.net/) which will automatically source .envrc when you change directories.
+   ```bash
+   source .envrc
+   ```
+   To simplify the process in the future, install [direnv] which will automatically source `.envrc` when you change directories.
 
-1. Run unit tests
+2. Run unit tests
 
-```bash
-./scripts/unit.sh
-```
+   ```bash
+   ./scripts/unit.sh
+   ```
 
-1. Run integration tests
+3. Run integration tests
 
-```bash
-./scripts/integration.sh
-```
+   ```bash
+   ./scripts/integration.sh
+   ```
 
-More information can be found on Github [cutlass](https://github.com/cloudfoundry/libbuildpack/cutlass).
+More information can be found on GitHub [cutlass].
 
 ### Reporting Issues
 Open an issue on this project
 
 ## Disclaimer
 This buildpack is experimental and not yet intended for production use.
+
+[direnv]: https://direnv.net/

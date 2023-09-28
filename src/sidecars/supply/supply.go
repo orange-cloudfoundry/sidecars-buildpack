@@ -133,7 +133,7 @@ func (s *Supplier) retrieveConfigPath() (string, error) {
 	userConfPath := strings.TrimSpace(os.Getenv(sidecarsConfPathEnvVar))
 	if userConfPath != "" {
 		if strings.HasPrefix(userConfPath, "/") {
-			return "", fmt.Errorf("Env var %s could not be an absolute path.", sidecarsConfPathEnvVar)
+			return "", fmt.Errorf("env var %s could not be an absolute path", sidecarsConfPathEnvVar)
 		}
 		return userConfPath, nil
 	}

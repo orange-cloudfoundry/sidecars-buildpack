@@ -27,7 +27,9 @@ type Builder struct {
 func (b *Builder) Run() error {
 	layer := b.Build.Layers.Layer("sidecars")
 	layerBin := filepath.Join(layer.Root, "bin")
-	os.MkdirAll(layerBin, 0755)
+	if err := os.MkdirAll(layerBin, 0755); err != nil {
+		return err
+	}
 
 	b.Build.Logger.Info("Installing cloud-sidecars ...")
 	err := b.Installer.InstallCloudSidecars(layer.Root, layerBin)
@@ -43,7 +45,9 @@ func (b *Builder) Run() error {
 	}
 
 	appDir := b.Build.Application.Root
-	os.MkdirAll(filepath.Join(appDir, pathSidecarsWd), 0755)
+	if err := os.MkdirAll(filepath.Join(appDir, pathSidecarsWd), 0755); err != nil {
+		return err
+	}
 	confPath := filepath.Join(appDir, pathSidecarsWd, configFileName)
 	userWdConfPath := filepath.Join(appDir, configFileName)
 	if _, err := os.Stat(userWdConfPath); err == nil {

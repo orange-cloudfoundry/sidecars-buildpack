@@ -39,7 +39,9 @@ func (s *Installer) InstallCloudSidecars(depDir, tempDir string) error {
 		gServerName += ".exe"
 		stack = "windows"
 	}
-	os.Setenv("CF_STACK", stack)
+	if err := os.Setenv("CF_STACK", stack); err != nil {
+		return err
+	}
 	dep, err := s.manifest.DefaultVersion("cloud-sidecars")
 	if err != nil {
 		return err

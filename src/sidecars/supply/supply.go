@@ -3,7 +3,6 @@ package supply
 import (
 	"fmt"
 	"io"
-	"io/ioutil"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -124,8 +123,10 @@ fi
 
 `, i, i)
 	}
-	os.MkdirAll(filepath.Join(s.Stager.BuildDir(), profiledUserPath), 0755)
-	return ioutil.WriteFile(filepath.Join(s.Stager.BuildDir(), profiledUserPath, profiledUserFilename), []byte(script), 0775)
+	if err := os.MkdirAll(filepath.Join(s.Stager.BuildDir(), profiledUserPath), 0755); err != nil {
+		return err
+	}
+	return os.WriteFile(filepath.Join(s.Stager.BuildDir(), profiledUserPath, profiledUserFilename), []byte(script), 0775)
 }
 
 func (s *Supplier) retrieveConfigPath() (string, error) {
@@ -133,11 +134,13 @@ func (s *Supplier) retrieveConfigPath() (string, error) {
 	userConfPath := strings.TrimSpace(os.Getenv(sidecarsConfPathEnvVar))
 	if userConfPath != "" {
 		if strings.HasPrefix(userConfPath, "/") {
-			return "", fmt.Errorf("Env var %s could not be an absolute path.", sidecarsConfPathEnvVar)
+			return "", fmt.Errorf("env var %s could not be an absolute path", sidecarsConfPathEnvVar)
 		}
 		return userConfPath, nil
 	}
-	os.MkdirAll(filepath.Join(buildDir, pathSidecarsWd), 0755)
+	if err := os.MkdirAll(filepath.Join(buildDir, pathSidecarsWd), 0755); err != nil {
+		return "", err
+	}
 	confPath := filepath.Join(buildDir, pathSidecarsWd, configFileName)
 	userWdConfPath := filepath.Join(buildDir, configFileName)
 	if _, err := os.Stat(userWdConfPath); err == nil {

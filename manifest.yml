@@ -10,25 +10,20 @@ dependencies:
     uri: https://github.com/orange-cloudfoundry/cloud-sidecars/releases/download/v0.4.1/cloud-sidecars_linux_amd64.zip
     sha256: a040d1006b1438bfe5f34aca4eda09fcef36861022bc0aa9df13434f95cd230a
     cf_stacks:
-      - cflinuxfs2
       - cflinuxfs3
       - cflinuxfs4
-  - name: cloud-sidecars
-    version: 0.4.1
-    uri: https://github.com/orange-cloudfoundry/cloud-sidecars/releases/download/v0.4.1/cloud-sidecars_windows_amd64.zip
-    sha256: 1fb17fd9f9e928004d10d4a269e977ae89e6cc2bb13391984b51887264130b0b
-    cf_stacks:
-      - windows2012R2
-      - windows2016
-      - windows
-include_files:
-  - README.md
-  - VERSION
-  - bin/detect
-  - bin/compile
-  - bin/supply
-  - bin/finalize
-  - bin/release
-  - bin/build
-  - manifest.yml
-pre_package: scripts/build.sh
+exclude_files:
+  - .git/
+  - .github/
+  - .envrc
+  - src/
+  - .gitignore
+  - .travis.yml
+  - buildpack.toml
+  - cf.Gemfile
+  - cf.Gemfile.lock
+  - go.mod
+  - go.sum
+  - vendor/
+  - scripts/
+  - fixtures/

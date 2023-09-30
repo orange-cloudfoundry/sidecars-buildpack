@@ -7,12 +7,8 @@ Under the hood it wraps the [cloud-sidecars](https://github.com/orange-cloudfoun
 Sidecar can be run beside your app or in front of your app as a reverse proxy to your app.
 
 This buildpack can't be used as a final buildpack and support stacks:
-- cflinuxfs2
 - cflinuxfs3
 - cflinuxfs4
-- windows2012R2
-- windows2016
-- windows
 
 **Tip**: Download [cloud-sidecars](https://github.com/orange-cloudfoundry/cloud-sidecars) command line to have a better usage experience
 
@@ -129,30 +125,32 @@ sidecars:
 ### Building the Buildpack
 To build this buildpack, run the following command from the buildpack's directory:
 
-1. Source the `.envrc` file in the buildpack directory.
-   ```bash
-   source .envrc
-   ```
-   To simplify the process in the future, install [direnv] which will automatically source `.envrc` when you change directories.
+1. Check out a tagged release. It is not recommended to bundle buildpacks based on master or develop as these are moving targets.
 
-2. Install buildpack-packager
    ```bash
-   ./scripts/install_tools.sh
+   git checkout $TAG
    ```
 
-3. Build the buildpack
-   ```bash
-   buildpack-packager build
+2. Get latest buildpack dependencies, this will require having Ruby 3.0 or running in a Ruby 3.0 container image
+
+   ```shell
+   BUNDLE_GEMFILE=cf.Gemfile bundle
+   ```
+
+3. Build the buildpack.
+
+   ```shell
+   BUNDLE_GEMFILE=cf.Gemfile bundle exec buildpack-packager [ --uncached | --cached ] [ --any-stack | --stack=STACK ]
    ```
 
 4. Use in Cloud Foundry
 
-   Upload the buildpack to your Cloud Foundry and optionally specify it by name
-  
-   ```bash
-   cf create-buildpack $BUILDPACK_NAME $BUILDPACK_ZIP_FILE_PATH 1
-   cf push my_app [-b $BUILDPACK_NAME]
-   ```
+   Upload the buildpack to your Cloud Foundry instance and optionally specify it by name
+
+    ```bash
+    cf create-buildpack $BUILDPACK_NAME $BUILDPACK_ZIP_FILE_PATH 1
+    cf push my_app [-b $BUILDPACK_NAME]
+    ```
 
 ### Testing
 Buildpacks use the [cutlass] framework (from Cloud Foundry [libbuildpack]) for running integration tests.

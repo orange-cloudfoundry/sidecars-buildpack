@@ -24,6 +24,14 @@ jobs:
         with:
           go-version: "1.21"
 
+      - name: cache go modules
+        uses: actions/cache@v3
+        with:
+          path: ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
+
       - name: tests modules
         run: |
           # This project does not vendorize it's dependencies.
@@ -43,20 +51,52 @@ jobs:
         run: |
           go test -v ./...
 
+      - name: build bin/supply
+        run: |
+          GOOS=linux go build -ldflags="-s -w" -o bin/supply ./src/sidecars/supply/cli
+
+      - name: build bin/build
+        run: |
+          GOOS=linux go build -ldflags="-s -w" -o bin/build ./src/sidecars/build/cli
+
       - name: setup ruby
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: 3.1
-      - name: build
-        run: |
-          GOOS=linux go build -ldflags="-s -w" -o bin/supply ./src/sidecars/supply/cli
-          GOOS=linux go build -ldflags="-s -w" -o bin/build ./src/sidecars/build/cli
 
-      - name: package
+      - name: set version file
         run: |
           echo "${GITHUB_REF_NAME:1}" > VERSION
+
+      - name: package uncached any stack
+        run: |
+          BUNDLE_GEMFILE=cf.Gemfile bundle
+          BUNDLE_GEMFILE=cf.Gemfile bundle exec buildpack-packager --uncached --any-stack
+
+      - name: package uncached for cflinuxfs3
+        run: |
+          BUNDLE_GEMFILE=cf.Gemfile bundle
+          BUNDLE_GEMFILE=cf.Gemfile bundle exec buildpack-packager --uncached --stack cflinuxfs3
+
+      - name: package uncached for cflinuxfs4
+        run: |
+          BUNDLE_GEMFILE=cf.Gemfile bundle
+          BUNDLE_GEMFILE=cf.Gemfile bundle exec buildpack-packager --uncached --stack cflinuxfs4
+
+      - name: package cached any stack
+        run: |
           BUNDLE_GEMFILE=cf.Gemfile bundle
           BUNDLE_GEMFILE=cf.Gemfile bundle exec buildpack-packager --cached --any-stack
+
+      - name: package cached for cflinuxfs3
+        run: |
+          BUNDLE_GEMFILE=cf.Gemfile bundle
+          BUNDLE_GEMFILE=cf.Gemfile bundle exec buildpack-packager --cached --stack cflinuxfs3
+
+      - name: package cached for cflinuxfs4
+        run: |
+          BUNDLE_GEMFILE=cf.Gemfile bundle
+          BUNDLE_GEMFILE=cf.Gemfile bundle exec buildpack-packager --cached --stack cflinuxfs4
 
       - name: create release
         uses: softprops/action-gh-release@v1

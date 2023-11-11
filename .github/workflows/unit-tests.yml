@@ -55,36 +55,14 @@ jobs:
         with:
           version: ${{ steps.previoustag.outputs.tag }}
 
-      - name: set version file
+      - name: package
         run: |
-          echo "${{ steps.semvers.outputs.patch }}+dev.1" > VERSION
-
-      - name: package uncached any stack
-        run: |
-          BUNDLE_GEMFILE=cf.Gemfile bundle
-          BUNDLE_GEMFILE=cf.Gemfile bundle exec buildpack-packager --uncached --any-stack
-
-      - name: package uncached for cflinuxfs3
-        run: |
-          BUNDLE_GEMFILE=cf.Gemfile bundle
-          BUNDLE_GEMFILE=cf.Gemfile bundle exec buildpack-packager --uncached --stack cflinuxfs3
-
-      - name: package uncached for cflinuxfs4
-        run: |
-          BUNDLE_GEMFILE=cf.Gemfile bundle
-          BUNDLE_GEMFILE=cf.Gemfile bundle exec buildpack-packager --uncached --stack cflinuxfs4
-
-      - name: package cached any stack
-        run: |
-          BUNDLE_GEMFILE=cf.Gemfile bundle
-          BUNDLE_GEMFILE=cf.Gemfile bundle exec buildpack-packager --cached --any-stack
-
-      - name: package cached for cflinuxfs3
-        run: |
-          BUNDLE_GEMFILE=cf.Gemfile bundle
-          BUNDLE_GEMFILE=cf.Gemfile bundle exec buildpack-packager --cached --stack cflinuxfs3
-
-      - name: package cached for cflinuxfs4
-        run: |
-          BUNDLE_GEMFILE=cf.Gemfile bundle
-          BUNDLE_GEMFILE=cf.Gemfile bundle exec buildpack-packager --cached --stack cflinuxfs4
+          source .envrc
+          go get github.com/cloudfoundry/libbuildpack/packager/buildpack-packager
+          go install github.com/cloudfoundry/libbuildpack/packager/buildpack-packager
+          buildpack-packager build -any-stack -version "${GITHUB_REF_NAME:1}"
+          buildpack-packager build -stack=cflinuxfs3 -version "${{ steps.semvers.outputs.patch }}+dev.1"
+          buildpack-packager build -stack=cflinuxfs4 -version "${{ steps.semvers.outputs.patch }}+dev.1"
+          buildpack-packager build -cached -any-stack -version "${{ steps.semvers.outputs.patch }}+dev.1"
+          buildpack-packager build -cached -stack=cflinuxfs3 -version "${{ steps.semvers.outputs.patch }}+dev.1"
+          buildpack-packager build -cached -stack=cflinuxfs4 -version "${{ steps.semvers.outputs.patch }}+dev.1"

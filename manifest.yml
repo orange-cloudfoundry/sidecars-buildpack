@@ -10,6 +10,7 @@ dependencies:
     uri: https://github.com/orange-cloudfoundry/cloud-sidecars/releases/download/v0.4.1/cloud-sidecars_linux_amd64.zip
     sha256: a040d1006b1438bfe5f34aca4eda09fcef36861022bc0aa9df13434f95cd230a
     cf_stacks:
+      - cflinuxfs2
       - cflinuxfs3
       - cflinuxfs4
 pre_package: scripts/build.sh

@@ -60,7 +60,7 @@ jobs:
           source .envrc
           go get github.com/cloudfoundry/libbuildpack/packager/buildpack-packager
           go install github.com/cloudfoundry/libbuildpack/packager/buildpack-packager
-          buildpack-packager build -any-stack -version "${GITHUB_REF_NAME:1}"
+          buildpack-packager build -any-stack -version "${{ steps.semvers.outputs.patch }}+dev.1"
           buildpack-packager build -stack=cflinuxfs3 -version "${{ steps.semvers.outputs.patch }}+dev.1"
           buildpack-packager build -stack=cflinuxfs4 -version "${{ steps.semvers.outputs.patch }}+dev.1"
           buildpack-packager build -cached -any-stack -version "${{ steps.semvers.outputs.patch }}+dev.1"

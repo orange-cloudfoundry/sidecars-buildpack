@@ -1,6 +1,0 @@
-pkg
-.bin
-scaffold_buildpack-*.zip
-/*.zip
-!.envrc
-vendor/

@@ -22,7 +22,7 @@ jobs:
       - name: set up go
         uses: actions/setup-go@v4
         with:
-          go-version: "1.21"
+          go-version: "1.22"
 
       - name: cache go modules
         uses: actions/cache@v3
@@ -57,11 +57,9 @@ jobs:
           go get github.com/cloudfoundry/libbuildpack/packager/buildpack-packager
           go install github.com/cloudfoundry/libbuildpack/packager/buildpack-packager
           buildpack-packager build -any-stack -version "${GITHUB_REF_NAME:1}"
-          buildpack-packager build -stack=cflinuxfs3 -version "${GITHUB_REF_NAME:1}"
           buildpack-packager build -stack=cflinuxfs4 -version "${GITHUB_REF_NAME:1}"
-          buildpack-packager build -cached -any-stack -version "${GITHUB_REF_NAME:1}"
-          buildpack-packager build -cached -stack=cflinuxfs3 -version "${GITHUB_REF_NAME:1}"
-          buildpack-packager build -cached -stack=cflinuxfs4 -version "${GITHUB_REF_NAME:1}"
+          buildpack-packager build -cached -cachedir ".cache" -any-stack -version "${GITHUB_REF_NAME:1}"
+          buildpack-packager build -cached -cachedir ".cache" -stack=cflinuxfs4 -version "${GITHUB_REF_NAME:1}"
 
       - name: create release
         uses: softprops/action-gh-release@v1

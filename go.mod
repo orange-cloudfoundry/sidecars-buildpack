@@ -5,7 +5,7 @@ go 1.21
 require (
 	github.com/blang/semver v3.5.1+incompatible
 	github.com/buildpack/libbuildpack v1.25.11
-	github.com/cloudfoundry/libbuildpack v0.0.0-20230404152448-8da916cb09fe
+	github.com/cloudfoundry/libbuildpack v0.0.0-20231211162543-86d10e150195
 	github.com/onsi/ginkgo v1.16.5
 	github.com/onsi/gomega v1.29.0
 )

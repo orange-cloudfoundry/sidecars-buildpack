@@ -57,10 +57,8 @@ jobs:
           go get github.com/cloudfoundry/libbuildpack/packager/buildpack-packager
           go install github.com/cloudfoundry/libbuildpack/packager/buildpack-packager
           buildpack-packager build -any-stack -version "${GITHUB_REF_NAME:1}"
-          buildpack-packager build -stack=cflinuxfs3 -version "${GITHUB_REF_NAME:1}"
           buildpack-packager build -stack=cflinuxfs4 -version "${GITHUB_REF_NAME:1}"
           buildpack-packager build -cached -any-stack -version "${GITHUB_REF_NAME:1}"
-          buildpack-packager build -cached -stack=cflinuxfs3 -version "${GITHUB_REF_NAME:1}"
           buildpack-packager build -cached -stack=cflinuxfs4 -version "${GITHUB_REF_NAME:1}"
 
       - name: create release

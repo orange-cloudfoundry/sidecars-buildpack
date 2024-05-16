@@ -54,12 +54,13 @@ jobs:
       - name: package
         run: |
           source .envrc
+          export GOFLAGS=-mod=readonly
           go get github.com/cloudfoundry/libbuildpack/packager/buildpack-packager
           go install github.com/cloudfoundry/libbuildpack/packager/buildpack-packager
-          buildpack-packager build -any-stack -version "${GITHUB_REF_NAME:1}"
-          buildpack-packager build -stack=cflinuxfs4 -version "${GITHUB_REF_NAME:1}"
-          buildpack-packager build -cached -cachedir ".cache" -any-stack -version "${GITHUB_REF_NAME:1}"
-          buildpack-packager build -cached -cachedir ".cache" -stack=cflinuxfs4 -version "${GITHUB_REF_NAME:1}"
+          buildpack-packager build -cachedir .cache -any-stack -version "${GITHUB_REF_NAME:-$GITHUB_SHA}"
+          buildpack-packager build -cachedir .cache -stack=cflinuxfs4 -version "${GITHUB_REF_NAME:-$GITHUB_SHA}"
+          buildpack-packager build -cachedir .cache -cached -any-stack -version "${GITHUB_REF_NAME:-$GITHUB_SHA}"
+          buildpack-packager build -cachedir .cache -cached -stack=cflinuxfs4 -version "${GITHUB_REF_NAME:-$GITHUB_SHA}"
 
       - name: create release
         uses: softprops/action-gh-release@v2

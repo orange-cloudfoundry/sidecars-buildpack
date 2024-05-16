@@ -16,13 +16,13 @@ jobs:
       - name: set up go
         uses: actions/setup-go@v5
         with:
-          go-version: "1.21"
+          go-version: "1.22"
 
       - name: cache go modules
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~/go/pkg/mod
-          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          key: "${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}"
           restore-keys: |
             ${{ runner.os }}-go-
 
@@ -38,31 +38,13 @@ jobs:
         run: |
           GOOS=linux go build -ldflags="-s -w" -o bin/build ./src/sidecars/build/cli
 
-      - name: setup ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: 3.1
-
-      - name: 'Get Previous tag'
-        id: previoustag
-        uses: "WyriHaximus/github-action-get-previous-tag@v1"
-        with:
-          fallback: 0.0.0
-
-      - name: 'Get next minor version'
-        id: semvers
-        uses: "WyriHaximus/github-action-next-semvers@v1"
-        with:
-          version: ${{ steps.previoustag.outputs.tag }}
-
       - name: package
         run: |
           source .envrc
+          export GOFLAGS=-mod=readonly
           go get github.com/cloudfoundry/libbuildpack/packager/buildpack-packager
           go install github.com/cloudfoundry/libbuildpack/packager/buildpack-packager
-          buildpack-packager build -any-stack -version "${GITHUB_REF_NAME:1}"
-          buildpack-packager build -stack=cflinuxfs3 -version "${{ steps.semvers.outputs.patch }}+dev.1"
-          buildpack-packager build -stack=cflinuxfs4 -version "${{ steps.semvers.outputs.patch }}+dev.1"
-          buildpack-packager build -cached -any-stack -version "${{ steps.semvers.outputs.patch }}+dev.1"
-          buildpack-packager build -cached -stack=cflinuxfs3 -version "${{ steps.semvers.outputs.patch }}+dev.1"
-          buildpack-packager build -cached -stack=cflinuxfs4 -version "${{ steps.semvers.outputs.patch }}+dev.1"
+          buildpack-packager build -cachedir .cache -any-stack -version "${GITHUB_SHA}"
+          buildpack-packager build -cachedir .cache -stack=cflinuxfs4 -version "${GITHUB_SHA}"
+          buildpack-packager build -cachedir .cache -cached -any-stack -version "${GITHUB_SHA}"
+          buildpack-packager build -cachedir .cache -cached -stack=cflinuxfs4 -version "${GITHUB_SHA}"

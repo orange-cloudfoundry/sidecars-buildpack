@@ -13,6 +13,7 @@ var _ = Describe("Simple Integration Test", func() {
 	var app *cutlass.App
 	AfterEach(func() {
 		if app != nil {
+			//nolint:errcheck
 			app.Destroy()
 		}
 		app = nil

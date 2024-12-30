@@ -7,7 +7,7 @@ require (
 	github.com/buildpack/libbuildpack v1.25.11
 	github.com/cloudfoundry/libbuildpack v0.0.0-20231211162543-86d10e150195
 	github.com/onsi/ginkgo v1.16.5
-	github.com/onsi/gomega v1.34.2
+	github.com/onsi/gomega v1.36.2
 )
 
 require (
@@ -24,9 +24,9 @@ require (
 	github.com/tidwall/gjson v1.17.1 // indirect
 	github.com/tidwall/match v1.1.1 // indirect
 	github.com/tidwall/pretty v1.2.1 // indirect
-	golang.org/x/net v0.28.0 // indirect
-	golang.org/x/sys v0.24.0 // indirect
-	golang.org/x/text v0.17.0 // indirect
+	golang.org/x/net v0.33.0 // indirect
+	golang.org/x/sys v0.28.0 // indirect
+	golang.org/x/text v0.21.0 // indirect
 	gopkg.in/tomb.v1 v1.0.0-20141024135613-dd632973f1e7 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
